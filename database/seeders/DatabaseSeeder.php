@@ -16,9 +16,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->disableForeignKeys();
-        $this->call(UserSeeder::class);
-        $this->call(PostSeeder::class);
-        $this->call(CommentSeeder::class);
+        $this->call([
+            UserSeeder::class,
+            PostSeeder::class,
+            CommentSeeder::class
+        ]);
         $this->enableForeignKeys();
     }
 }
