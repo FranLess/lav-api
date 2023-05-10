@@ -19,8 +19,6 @@ class CommentFactory extends Factory
      */
     public function definition(): array
     {
-
-
         return [
             'body' => [],
             'user_id' => FactoryHelper::getRandomModelId(User::class),
