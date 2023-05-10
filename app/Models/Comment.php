@@ -13,7 +13,6 @@ class Comment extends Model
         'body' => 'array'
     ];
 
-    
 
     public function post(): BelongsTo
     {
