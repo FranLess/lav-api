@@ -13,10 +13,14 @@ return new class extends Migration
     {
         Schema::create('post_user', function (Blueprint $table) {
             $table->foreignId('user_id')->index();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();;
 
             $table->foreignId('post_id')->index();
-            $table->foreign('post_id')->references('id')->on('posts');
+            $table->foreign('post_id')->references('id')->on('posts')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();;
 
             $table->primary(['post_id', 'user_id']);
         });

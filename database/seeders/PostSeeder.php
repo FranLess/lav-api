@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\User;
 use Database\Factories\Helpers\FactoryHelper;
 use Database\Seeders\Traits\TruncateTable;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -18,12 +19,11 @@ class PostSeeder extends Seeder
     public function run(): void
     {
         $this->truncate('posts');
-        $posts = Post::factory(10)
-            ->has(Comment::factory(3), 'comments')
+        $posts = Post::factory(200)
             ->create();
 
         $posts->each(function (Post $post) {
-            $post->users->sync([FactoryHelper::getRandomModelId(User::class)]);
+            $post->users()->sync([FactoryHelper::getRandomModelId(User::class)]);
         });
     }
 }

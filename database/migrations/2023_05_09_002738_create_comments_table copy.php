@@ -16,10 +16,14 @@ return new class extends Migration
             $table->json('body');
 
             $table->foreignId('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
 
             $table->foreignId('post_id');
-            $table->foreign('post_id')->references('id')->on('posts');
+            $table->foreign('post_id')->references('id')->on('posts')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->timestamps();
         });
     }
