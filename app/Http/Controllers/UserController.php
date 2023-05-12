@@ -20,7 +20,7 @@ class UserController extends Controller
     public function index()
     {
         // event(new UserCreated(User::factory()->create()));
-        $user = User::paginate(20)->with(['posts']);
+        $user = User::with(['posts'])->paginate(20);
 
         return UserResource::collection($user);
     }
@@ -33,7 +33,8 @@ class UserController extends Controller
         $created = $userRepository->store($request->only([
             'name',
             'email',
-            'users_ids'
+            'password',
+            'post_ids'
         ]));
 
         return new UserResource($created);
@@ -55,7 +56,7 @@ class UserController extends Controller
         $userRepository->update($user, $request->only([
             'name',
             'email',
-            'users_ids'
+            'posts_ids'
         ]));
 
         return new UserResource($user);

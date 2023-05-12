@@ -16,7 +16,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::paginate(20)->with(['post', 'user']);
+        $comments = Comment::with(['post', 'user'])->paginate(20);
         return CommentResource::collection($comments);
     }
 
@@ -25,11 +25,12 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request, CommentRepository $commentRepository)
     {
-        $commentRepository->store($request->only([
+        $comment = $commentRepository->store($request->only([
             'body',
             'user_id',
             'post_id'
         ]));
+        return $comment;
     }
 
     /**

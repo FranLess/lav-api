@@ -45,8 +45,8 @@ class CommentRepository
                 'Cannot update the comment'
             );
 
-            event(new CommentUpdated($comment));
-            return $comment;
+            event(new CommentUpdated($comment->refresh()));
+            return $comment->refresh();
         });
     }
     public function delete(Comment $comment)
@@ -60,8 +60,8 @@ class CommentRepository
                 'Cannot delete the comment'
             );
 
-            event(new CommentDeleted($commentDeleted));
-            return $commentDeleted;
+            event(new CommentDeleted($comment));
+            return $comment;
         });
     }
 }
