@@ -17,7 +17,7 @@ class UserRepository
             $user = User::create([
                 'name' => data_get($attributes, 'name', 'unnamed'),
                 'email' => data_get($attributes, 'email'),
-                'password' => data_get($attributes, 'password'),
+                'password' => data_get($attributes, 'password', 'password'),
             ]);
 
             if ($postIds = data_get($attributes, 'user_ids'))
@@ -36,22 +36,22 @@ class UserRepository
     public function update(User $user, array $attributes)
     {
         return DB::transaction(function () use ($attributes, $user) {
-            $user = $user->update([
+            $updated = $user->update([
                 'name' => data_get($attributes, 'name', $user->name),
                 'email' => data_get($attributes, 'email', $user->email),
-                'password' => data_get($attributes, 'password', $user->password),
+                // 'password' => data_get($attributes, 'password', $user->password),
             ]);
 
             if ($postIds = data_get($attributes, 'user_ids'))
                 $user->posts()->sync($postIds);
 
-            throw_if((!$user),
+            throw_if((!$updated),
                 GeneralJsonException::class,
                 'Cannot update the user'
             );
 
             event(new UserUpdated($user));
-            return $user;
+            return $user->refresh();
         });
     }
     public function delete(User $user)
@@ -66,7 +66,7 @@ class UserRepository
                 'Cannot delete the user'
             );
 
-            event(new UserDeleted($userDeleted));
+            event(new UserDeleted($user));
             return $userDeleted;
         });
     }
