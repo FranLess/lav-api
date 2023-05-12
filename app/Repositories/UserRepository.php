@@ -15,8 +15,9 @@ class UserRepository
     {
         return DB::transaction(function () use ($attributes) {
             $user = User::create([
-                'title' => data_get($attributes, 'title', 'untittled'),
-                'body' => data_get($attributes, 'body')
+                'name' => data_get($attributes, 'name', 'unnamed'),
+                'email' => data_get($attributes, 'email'),
+                'password' => data_get($attributes, 'password'),
             ]);
 
             if ($postIds = data_get($attributes, 'user_ids'))
@@ -35,15 +36,16 @@ class UserRepository
     public function update(User $user, array $attributes)
     {
         return DB::transaction(function () use ($attributes, $user) {
-            $updated = $user->update([
-                'title' => data_get($attributes, 'title', $user->title),
-                'body' => data_get($attributes, 'body', $user->body)
+            $user = $user->update([
+                'name' => data_get($attributes, 'name', $user->name),
+                'email' => data_get($attributes, 'email', $user->email),
+                'password' => data_get($attributes, 'password', $user->password),
             ]);
 
             if ($postIds = data_get($attributes, 'user_ids'))
                 $user->posts()->sync($postIds);
 
-            throw_if((!$updated),
+            throw_if((!$user),
                 GeneralJsonException::class,
                 'Cannot update the user'
             );

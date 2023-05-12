@@ -14,21 +14,20 @@ class CommentRepository
     public function store(array $attributes)
     {
         return DB::transaction(function () use ($attributes) {
-            $comment = Comment::create([
-                'title' => data_get($attributes, 'title', 'untittled'),
-                'body' => data_get($attributes, 'body')
+            $created = Comment::create([
+                'body' => data_get($attributes, 'body'),
+                'user_id' => data_get($attributes, 'user_id'),
+                'post_id' => data_get($attributes, 'post_id')
             ]);
 
-            if ($userIds = data_get($attributes, 'user_ids'))
-                $comment->users()->sync($userIds);
 
-            throw_if((!$comment),
+            throw_if((!$created),
                 GeneralJsonException::class,
                 'Cannot store the comment'
             );
 
-            event(new CommentCreated($comment));
-            return $comment;
+            event(new CommentCreated($created));
+            return $created;
         });
     }
 
@@ -36,12 +35,10 @@ class CommentRepository
     {
         return DB::transaction(function () use ($attributes, $comment) {
             $updated = $comment->update([
-                'title' => data_get($attributes, 'title', $comment->title),
-                'body' => data_get($attributes, 'body', $comment->body)
+                'body' => data_get($attributes, 'body', $comment->body),
+                'user_id' => data_get($attributes, 'user_id', $comment->user_id),
+                'post_id' => data_get($attributes, 'post_id', $comment->post_id)
             ]);
-
-            if ($userIds = data_get($attributes, 'user_ids'))
-                $comment->users()->sync($userIds);
 
             throw_if((!$updated),
                 GeneralJsonException::class,
@@ -56,16 +53,15 @@ class CommentRepository
     {
         return DB::transaction(function () use ($comment) {
 
-            $usersDeleted = $comment->users()->detach();
-            $commentdeleted = Comment::destroy($comment->id);
+            $commentDeleted = Comment::destroy($comment->id);
 
-            throw_if((!$commentdeleted || $usersDeleted),
+            throw_if((!$commentDeleted),
                 GeneralJsonException::class,
                 'Cannot delete the comment'
             );
 
-            event(new CommentDeleted($commentdeleted));
-            return $commentdeleted;
+            event(new CommentDeleted($commentDeleted));
+            return $commentDeleted;
         });
     }
 }

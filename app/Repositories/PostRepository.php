@@ -16,21 +16,21 @@ class PostRepository
     public function store(array $attributes)
     {
         return DB::transaction(function () use ($attributes) {
-            $post = Post::create([
+            $created = Post::create([
                 'title' => data_get($attributes, 'title', 'untittled'),
                 'body' => data_get($attributes, 'body')
             ]);
 
             if ($userIds = data_get($attributes, 'user_ids'))
-                $post->users()->sync($userIds);
+                $created->users()->sync($userIds);
 
-            throw_if((!$post),
+            throw_if((!$created),
                 GeneralJsonException::class,
                 'Cannot store the post'
             );
 
-            event(new PostCreated($post));
-            return $post;
+            event(new PostCreated($created));
+            return $created;
         });
     }
 
@@ -59,15 +59,15 @@ class PostRepository
         return DB::transaction(function () use ($post) {
 
             $usersDeleted = $post->users()->detach();
-            $postdeleted = Post::destroy($post->id);
+            $postDeleted = Post::destroy($post->id);
 
-            throw_if((!$postdeleted || $usersDeleted),
+            throw_if((!$postDeleted || $usersDeleted),
                 GeneralJsonException::class,
                 'Cannot delete the post'
             );
 
-            event(new PostDeleted($postdeleted));
-            return $postdeleted;
+            event(new PostDeleted($postDeleted));
+            return $postDeleted;
         });
     }
 }
