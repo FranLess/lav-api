@@ -36,6 +36,7 @@ class PostRepository
 
     public function update(Post $post, array $attributes)
     {
+        throw_if(empty($attributes), GeneralJsonException::class, 'cannot update the post');
         return DB::transaction(function () use ($attributes, $post) {
             $updated = $post->update([
                 'title' => data_get($attributes, 'title', $post->title),
@@ -66,7 +67,7 @@ class PostRepository
                 'Cannot delete the post'
             );
 
-            event(new PostDeleted($postDeleted));
+            event(new PostDeleted($post));
             return $postDeleted;
         });
     }

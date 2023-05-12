@@ -38,11 +38,11 @@ class Post extends Model
         );
     }
 
-    public function title(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => strtoupper($value),
-            set: fn ($value) => strtolower($value)
-        );
-    }
+    // public function title(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => strtoupper($value),
+    //         set: fn ($value) => strtolower($value)
+    //     );
+    // }
 }

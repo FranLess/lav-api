@@ -20,7 +20,7 @@ class UserController extends Controller
     public function index()
     {
         // event(new UserCreated(User::factory()->create()));
-        $user = User::paginate(20)->with(['posts']);
+        $user = User::with(['posts'])->paginate(20);
 
         return UserResource::collection($user);
     }

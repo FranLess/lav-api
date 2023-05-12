@@ -30,8 +30,8 @@ class EventServiceProvider extends ServiceProvider
 
     protected $subscribe = [
         UserSubscriber::class,
-        CommentSubscriber::class,
-        PostSubscriber::class
+        // CommentSubscriber::class,
+        // PostSubscriber::class
     ];
 
     /**

@@ -25,11 +25,6 @@ Route::get('/', function () {
 if (App::isLocal()) {
 
     Route::get('mail-sample', function () {
-        $user = User::factory()->make();
-        Mail::to($user)
-            ->send(new WelcomeMail($user));
-        return null;
-
         return (new WelcomeMail(User::factory()->make()))->render();
     });
 }
