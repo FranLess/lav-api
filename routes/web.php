@@ -1,5 +1,10 @@
 <?php
 
+use App\Listeners\SendWelcomeEmail;
+use App\Mail\WelcomeMail;
+use App\Models\User;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +21,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+if (App::isLocal()) {
+
+    Route::get('mail-sample', function () {
+        return (new WelcomeMail(User::factory()->make()))->render();
+    });
+}

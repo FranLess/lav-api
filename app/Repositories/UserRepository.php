@@ -15,8 +15,9 @@ class UserRepository
     {
         return DB::transaction(function () use ($attributes) {
             $user = User::create([
-                'title' => data_get($attributes, 'title', 'untittled'),
-                'body' => data_get($attributes, 'body')
+                'name' => data_get($attributes, 'name', 'unnamed'),
+                'email' => data_get($attributes, 'email'),
+                'password' => data_get($attributes, 'password', 'password'),
             ]);
 
             if ($postIds = data_get($attributes, 'user_ids'))
@@ -36,8 +37,9 @@ class UserRepository
     {
         return DB::transaction(function () use ($attributes, $user) {
             $updated = $user->update([
-                'title' => data_get($attributes, 'title', $user->title),
-                'body' => data_get($attributes, 'body', $user->body)
+                'name' => data_get($attributes, 'name', $user->name),
+                'email' => data_get($attributes, 'email', $user->email),
+                // 'password' => data_get($attributes, 'password', $user->password),
             ]);
 
             if ($postIds = data_get($attributes, 'user_ids'))
@@ -49,7 +51,7 @@ class UserRepository
             );
 
             event(new UserUpdated($user));
-            return $user;
+            return $user->refresh();
         });
     }
     public function delete(User $user)
@@ -64,7 +66,7 @@ class UserRepository
                 'Cannot delete the user'
             );
 
-            event(new UserDeleted($userDeleted));
+            event(new UserDeleted($user));
             return $userDeleted;
         });
     }

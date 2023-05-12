@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\Models\UserCreated;
+use App\Events\Models\User\UserCreated;
 use App\Exceptions\GeneralJsonException;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
@@ -20,7 +20,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        event(new UserCreated(User::factory()->create()));
+        // event(new UserCreated(User::factory()->create()));
         $posts = Post::paginate(20);
 
         return PostResource::collection($posts);

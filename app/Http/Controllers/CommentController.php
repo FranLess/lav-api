@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use App\Http\Resources\CommentResource;
+use App\Repositories\CommentRepository;
+use Illuminate\Http\JsonResponse;
 
 class CommentController extends Controller
 {
@@ -13,15 +16,21 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        $comments = Comment::with(['post', 'user'])->paginate(20);
+        return CommentResource::collection($comments);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCommentRequest $request)
+    public function store(StoreCommentRequest $request, CommentRepository $commentRepository)
     {
-        //
+        $comment = $commentRepository->store($request->only([
+            'body',
+            'user_id',
+            'post_id'
+        ]));
+        return $comment;
     }
 
     /**
@@ -29,22 +38,33 @@ class CommentController extends Controller
      */
     public function show(Comment $comment)
     {
-        //
+        return new CommentResource($comment);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCommentRequest $request, Comment $comment)
+    public function update(UpdateCommentRequest $request, Comment $comment, CommentRepository $commentRepository)
     {
-        //
+        $commentRepository->update($comment, $request->only([
+            'body',
+            'user_id',
+            'post_id'
+        ]));
+
+        return new CommentResource($comment);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment, CommentRepository $commentRepository)
     {
-        //
+        $commentRepository->delete($comment);
+        return new JsonResponse([
+            'data' => [
+                'success'
+            ]
+        ]);
     }
 }
