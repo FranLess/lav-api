@@ -22,6 +22,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::middleware(['guest:' . config('fortify.guard')])
+    ->get('/reset-password/{token}', function ($token) {
+        return $token;
+    })->name('password.reset');
+
+
 if (App::isLocal()) {
 
     Route::get('mail-sample', function () {
