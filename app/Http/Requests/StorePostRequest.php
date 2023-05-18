@@ -25,7 +25,7 @@ class StorePostRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string'],
-            'body' => ['required', 'string'],
+            'body' => ['required', 'array'],
             'user_ids' => ['required', 'array', new ArrayOfNumbers]
         ];
     }

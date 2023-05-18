@@ -44,6 +44,7 @@
             "@php artisan ide-helper:generate",
             "@php artisan package:discover --ansi"
         ],
+        "test": "./vendor/bin/phpunit",
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],

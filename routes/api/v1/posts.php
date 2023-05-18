@@ -21,4 +21,7 @@ Route::prefix('posts')
 
         Route::delete('{post}', 'destroy')
             ->name('destroy');
+
+        Route::get('/{post}/share', 'share')
+            ->name('share');
     });
