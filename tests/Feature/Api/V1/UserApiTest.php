@@ -18,6 +18,13 @@ class UserApiTest extends TestCase
     use RefreshDatabase;
 
     protected $uri = '/api/v1/users';
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->actingAs(User::factory()->make(), 'api');
+    }
+
     public function test_index()
     {
         // store users to the DB

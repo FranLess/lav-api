@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\Models\User\UserCreated;
-use App\Exceptions\GeneralJsonException;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
-use App\Models\User;
 use App\Repositories\PostRepository;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class PostController extends Controller
 {
@@ -70,6 +68,18 @@ class PostController extends Controller
         $postRepository->delete($post);
         return new JsonResponse([
             'data' => 'succes'
+        ]);
+    }
+
+    // signed routes| rutas temporales, para uso compartido privado
+    public function share(Request $request, Post $post)
+    {
+        $url = URL::temporarySignedRoute('shared.post', now()->addSeconds(20), [
+            'post' => $post->id
+        ]);
+
+        return new JsonResponse([
+            'data' => $url
         ]);
     }
 }

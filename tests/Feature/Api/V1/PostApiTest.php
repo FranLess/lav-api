@@ -18,6 +18,13 @@ class PostApiTest extends TestCase
     use RefreshDatabase;
 
     protected $uri = '/api/v1/posts';
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->actingAs(User::factory()->make(), 'api');
+    }
+
     public function test_index()
     {
         //load data in DB

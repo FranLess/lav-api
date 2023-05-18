@@ -18,7 +18,7 @@ class PostFactory extends Factory
     {
         return [
             'title' => fake()->word(),
-            'body' => [],
+            'body' => ['abc'],
         ];
     }
 }

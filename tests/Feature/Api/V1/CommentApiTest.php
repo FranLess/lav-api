@@ -18,6 +18,13 @@ class CommentApiTest extends TestCase
 {
     use RefreshDatabase;
     protected $uri = '/api/v1/comments';
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->actingAs(User::factory()->make());
+    }
+
     public function test_index()
     {
         $comments = Comment::factory(10)->create();
