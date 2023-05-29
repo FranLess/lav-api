@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\RouteHelper;
+use App\Http\Controllers\SanctumTokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,8 @@ Route::middleware([
     // require __DIR__ . '/api/v1/posts.php';
     // require __DIR__ . '/api/v1/users.php';
 });
+
+Route::post('/sanctum/token', SanctumTokenController::class);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
